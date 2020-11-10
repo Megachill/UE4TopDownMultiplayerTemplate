@@ -4,10 +4,11 @@
  * I have added the networking bit which is the one that tells the AIPlayerPawn to move
  */
 
-#include "TDMP.h"
 #include "TDMPPlayerController.h"
-#include "AI/Navigation/NavigationSystem.h"
-#include "Runtime/Engine/Classes/Components/DecalComponent.h"
+#include "TDMP.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "NavigationSystem.h"
+#include "Components/DecalComponent.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "TDMPCharacter.h"
 #include "TDMPCharacterProxy.h"
@@ -80,10 +81,14 @@ void ATDMPPlayerController::MoveToMouseCursor()
 {
 	// Trace to see what is under the mouse cursor
 	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+	GetHitResultUnderCursor(ECC_PhysicsBody, false, Hit);
 
 	if (Hit.bBlockingHit)
 	{
+		if (Hit.GetActor()->IsA(ATDMPCharacter::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Actor, %s"), *GetDebugName(Hit.GetActor()));
+		}
 		// We hit something, move there
 		SetNewMoveDestination(Hit.ImpactPoint);
 	}
@@ -126,7 +131,7 @@ void ATDMPPlayerController::ServerSetNewMoveDestination_Implementation(const FVe
 	ATDMPCharacterProxy* const Pawn = Cast<ATDMPCharacterProxy>(GetPawn());
 	if (Pawn)
 	{
-		UNavigationSystem* const NavSys = GetWorld()->GetNavigationSystem();
+		UNavigationSystemV1* const NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
 		float const Distance = FVector::Dist(DestLocation, Pawn->GetActorLocation());
 
 		// issue move command

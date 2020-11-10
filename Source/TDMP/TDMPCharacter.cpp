@@ -1,9 +1,9 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
-#include "TDMP.h"
 #include "TDMPCharacter.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-#include "Runtime/Engine/Classes/Components/DecalComponent.h"
+#include "TDMP.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/DecalComponent.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 
 ATDMPCharacter::ATDMPCharacter()

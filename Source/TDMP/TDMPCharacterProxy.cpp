@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-#include "TDMP.h"
 #include "TDMPCharacterProxy.h"
+#include "TDMP.h"
 #include "TDMPCharacter.h"
 #include "TDMPPlayerController.h"
 #include "AIController.h"
@@ -31,19 +30,19 @@ ATDMPCharacterProxy::ATDMPCharacterProxy(const class FObjectInitializer& ObjectI
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;*/
 
 	// create camera boom
-	CameraBoom = ObjectInitializer.CreateDefaultSubobject<USpringArmComponent>(this, TEXT("CameraBoom"));
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when character does
+	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
 	CameraBoom->TargetArmLength = 1000.f;
-	CameraBoom->RelativeRotation = FRotator(-60.f, 0.f, 0.f);
+	CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// create camera
-	TopDownCameraComponent = ObjectInitializer.CreateDefaultSubobject<UCameraComponent>(this, TEXT("TopDownCamera"));
+	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // camera does not rotate relative to arm
 
-	if (Role == ROLE_Authority)
+	if (GetLocalRole() == ROLE_Authority)
 	{
 		static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDownCPP/Blueprints/BP_TDCharacter"));
 		//if (PlayerPawnBPClass.Succeeded()) 
@@ -76,7 +75,7 @@ void ATDMPCharacterProxy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (Role == ROLE_Authority)
+	if (GetLocalRole() == ROLE_Authority)
 	{
 		// get current location of player proxy
 		FVector Location = GetActorLocation();
@@ -84,7 +83,7 @@ void ATDMPCharacterProxy::BeginPlay()
 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
-		SpawnParams.Instigator = Instigator;
+		SpawnParams.Instigator = GetInstigator();
 		SpawnParams.bNoFail = true;
 
 		// spawn actual player

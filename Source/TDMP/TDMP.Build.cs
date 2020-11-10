@@ -4,8 +4,11 @@ using UnrealBuildTool;
 
 public class TDMP : ModuleRules
 {
-	public TDMP(TargetInfo Target)
+	public TDMP(ReadOnlyTargetRules Target) : base (Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "AIModule" });
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		MinFilesUsingPrecompiledHeaderOverride = 1;
+		bFasterWithoutUnity = true;
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "AIModule","NavigationSystem" });
 	}
 }

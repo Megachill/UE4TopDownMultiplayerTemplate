@@ -1,4 +1,4 @@
-### C++ TopDown Multiplayer Template - 4.14.1
+### C++ TopDown Multiplayer Template - (updated for 4.25)
 
 This Template is made for those who want to know how to create a multiplayer version of EPICs TopDown Template. This is C++ and not Blueprint. If you would like to see a blueprinted variant please go to the following URL:
 
